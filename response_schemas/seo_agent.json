@@ -1,0 +1,41 @@
+{
+  "agent_name": "SEO Analysis Agent",
+  "agent_id": "699596a1f55ddf0ca0a37e8a",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "response_schema": {
+    "overall_seo_score": "number",
+    "keyword_analysis": {
+      "target_keywords": [
+        {
+          "keyword": "string",
+          "density": "string",
+          "occurrences": "number"
+        }
+      ],
+      "suggestions": ["string"]
+    },
+    "readability": {
+      "score": "number",
+      "reading_level": "string",
+      "avg_sentence_length": "string",
+      "feedback": "string"
+    },
+    "meta_suggestions": {
+      "meta_title": "string",
+      "meta_description": "string"
+    },
+    "heading_structure": {
+      "current_structure": ["string"],
+      "suggestions": ["string"]
+    },
+    "recommendations": [
+      {
+        "priority": "string",
+        "recommendation": "string",
+        "impact": "string"
+      }
+    ]
+  }
+}

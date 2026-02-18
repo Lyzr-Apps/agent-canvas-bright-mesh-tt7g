@@ -1,0 +1,28 @@
+{
+  "agent_name": "Content Coordinator",
+  "agent_id": "6995967d1ca5cd36a5c31b03",
+  "description": "Orchestrates the research-to-writing pipeline, routes topic briefs to sub-agents, and aggregates the final polished content piece",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "title": "string",
+    "content": "string",
+    "meta_description": "string",
+    "format_type": "string",
+    "word_count": "number",
+    "key_highlights": [
+      "string"
+    ]
+  },
+  "example_response": {
+    "title": "sample string",
+    "content": "sample string",
+    "meta_description": "sample string",
+    "format_type": "sample string",
+    "word_count": 0,
+    "key_highlights": [
+      "sample string"
+    ]
+  }
+}

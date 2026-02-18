@@ -1,0 +1,88 @@
+{
+  "agent_name": "SEO Analysis Agent",
+  "agent_id": "699596a1f55ddf0ca0a37e8a",
+  "description": "Evaluates content for keyword optimization, readability, meta tag quality, heading structure, and provides actionable improvement recommendations with scoring",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "overall_seo_score": "number",
+    "keyword_analysis": {
+      "target_keywords": [
+        {
+          "keyword": "string",
+          "density": "string",
+          "occurrences": "number"
+        }
+      ],
+      "suggestions": [
+        "string"
+      ]
+    },
+    "readability": {
+      "score": "number",
+      "reading_level": "string",
+      "avg_sentence_length": "string",
+      "feedback": "string"
+    },
+    "meta_suggestions": {
+      "meta_title": "string",
+      "meta_description": "string"
+    },
+    "heading_structure": {
+      "current_structure": [
+        "string"
+      ],
+      "suggestions": [
+        "string"
+      ]
+    },
+    "recommendations": [
+      {
+        "priority": "string",
+        "recommendation": "string",
+        "impact": "string"
+      }
+    ]
+  },
+  "example_response": {
+    "overall_seo_score": 0,
+    "keyword_analysis": {
+      "target_keywords": [
+        {
+          "keyword": "sample string",
+          "density": "sample string",
+          "occurrences": 0
+        }
+      ],
+      "suggestions": [
+        "sample string"
+      ]
+    },
+    "readability": {
+      "score": 0,
+      "reading_level": "sample string",
+      "avg_sentence_length": "sample string",
+      "feedback": "sample string"
+    },
+    "meta_suggestions": {
+      "meta_title": "sample string",
+      "meta_description": "sample string"
+    },
+    "heading_structure": {
+      "current_structure": [
+        "sample string"
+      ],
+      "suggestions": [
+        "sample string"
+      ]
+    },
+    "recommendations": [
+      {
+        "priority": "sample string",
+        "recommendation": "sample string",
+        "impact": "sample string"
+      }
+    ]
+  }
+}

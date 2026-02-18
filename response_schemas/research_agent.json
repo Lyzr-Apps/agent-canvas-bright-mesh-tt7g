@@ -1,0 +1,15 @@
+{
+  "agent_name": "Research Agent",
+  "agent_id": "6995966bf55ddf0ca0a37e87",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "response_schema": {
+    "research_summary": "string",
+    "key_trends": ["string"],
+    "competitor_angles": ["string"],
+    "statistics": ["string"],
+    "audience_insights": "string",
+    "content_opportunities": ["string"]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "agent_name": "Content Coordinator",
+  "agent_id": "6995967d1ca5cd36a5c31b03",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "response_schema": {
+    "title": "string",
+    "content": "string",
+    "meta_description": "string",
+    "format_type": "string",
+    "word_count": "number",
+    "key_highlights": ["string"]
+  }
+}

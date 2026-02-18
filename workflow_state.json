@@ -1,0 +1,25 @@
+{
+  "agents": {
+    "content_coordinator": {
+      "agent_id": "6995967d1ca5cd36a5c31b03",
+      "type": "manager"
+    },
+    "research_agent": {
+      "agent_id": "6995966bf55ddf0ca0a37e87",
+      "type": "sub-agent"
+    },
+    "content_writer": {
+      "agent_id": "6995966b02bd75109d36fa3e",
+      "type": "sub-agent"
+    },
+    "seo_agent": {
+      "agent_id": "699596a1f55ddf0ca0a37e8a",
+      "type": "independent"
+    },
+    "graphic_agent": {
+      "agent_id": "699596a130d90c5d3d534af1",
+      "type": "independent",
+      "has_image_output": true
+    }
+  }
+}

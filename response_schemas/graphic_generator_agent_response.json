@@ -1,0 +1,28 @@
+{
+  "agent_name": "Graphic Generator Agent",
+  "agent_id": "699596a130d90c5d3d534af1",
+  "description": "Creates marketing visuals -- blog thumbnails, social media graphics, banners -- based on user-provided creative briefs",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "image_description": "string",
+    "style_applied": "string",
+    "aspect_ratio": "string",
+    "design_notes": "string"
+  },
+  "example_response": {
+    "image_description": "sample string",
+    "style_applied": "sample string",
+    "aspect_ratio": "sample string",
+    "design_notes": "sample string"
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      {
+        "file_url": "https://example.com/image.png"
+      }
+    ]
+  }
+}

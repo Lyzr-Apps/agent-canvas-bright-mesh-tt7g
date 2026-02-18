@@ -1,0 +1,13 @@
+{
+  "agent_name": "Graphic Generator Agent",
+  "agent_id": "699596a130d90c5d3d534af1",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": true,
+  "response_schema": {
+    "image_description": "string",
+    "style_applied": "string",
+    "aspect_ratio": "string",
+    "design_notes": "string"
+  }
+}
