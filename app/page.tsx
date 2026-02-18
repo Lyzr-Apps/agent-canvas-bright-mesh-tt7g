@@ -902,30 +902,73 @@ function GraphicsStudioScreen({
     setError(null)
     setResult(null)
 
-    const message = `Create a ${style} marketing visual with ${aspectRatio} aspect ratio.\n\nDescription: ${description}\n\nStyle: ${style}\nPlease generate a professional, high-quality marketing graphic.`
-    const res = await callAIAgent(message, GRAPHIC_AGENT_ID)
+    try {
+      const message = `Create a ${style} marketing visual with ${aspectRatio} aspect ratio.\n\nDescription: ${description}\n\nStyle: ${style}\nPlease generate a professional, high-quality marketing graphic.`
+      const res = await callAIAgent(message, GRAPHIC_AGENT_ID)
 
-    if (res.success) {
-      const data = parseAgentResponse(res)
-      const images = res?.module_outputs?.artifact_files
-      const imageUrl = Array.isArray(images) && images.length > 0 ? images[0]?.file_url ?? '' : ''
+      if (res.success) {
+        const data = parseAgentResponse(res)
 
-      const item: GraphicItem = {
-        imageUrl,
-        image_description: data?.image_description ?? description,
-        style_applied: data?.style_applied ?? style,
-        aspect_ratio: data?.aspect_ratio ?? aspectRatio,
-        design_notes: data?.design_notes ?? '',
-        description,
-        date: new Date().toISOString(),
+        // Extract image URL from multiple possible locations
+        let imageUrl = ''
+
+        // 1. Top-level module_outputs (standard path)
+        const topModuleFiles = res?.module_outputs?.artifact_files
+        if (Array.isArray(topModuleFiles) && topModuleFiles.length > 0) {
+          imageUrl = topModuleFiles[0]?.file_url ?? ''
+        }
+
+        // 2. Check inside response.result for module_outputs or image URLs
+        if (!imageUrl && data) {
+          // Some agents return image_url or url directly in the result
+          if (typeof data?.image_url === 'string' && data.image_url) {
+            imageUrl = data.image_url
+          } else if (typeof data?.url === 'string' && data.url) {
+            imageUrl = data.url
+          } else if (typeof data?.file_url === 'string' && data.file_url) {
+            imageUrl = data.file_url
+          }
+          // Check if module_outputs is nested inside the parsed data
+          const nestedFiles = data?.module_outputs?.artifact_files
+          if (!imageUrl && Array.isArray(nestedFiles) && nestedFiles.length > 0) {
+            imageUrl = nestedFiles[0]?.file_url ?? ''
+          }
+        }
+
+        // 3. Check raw_response for module_outputs as fallback
+        if (!imageUrl && res?.raw_response) {
+          try {
+            const rawParsed = typeof res.raw_response === 'string' ? JSON.parse(res.raw_response) : res.raw_response
+            const rawFiles = rawParsed?.module_outputs?.artifact_files
+              ?? rawParsed?.response?.module_outputs?.artifact_files
+            if (Array.isArray(rawFiles) && rawFiles.length > 0) {
+              imageUrl = rawFiles[0]?.file_url ?? ''
+            }
+          } catch {
+            // ignore parse failures on raw_response
+          }
+        }
+
+        const item: GraphicItem = {
+          imageUrl,
+          image_description: data?.image_description ?? description,
+          style_applied: data?.style_applied ?? style,
+          aspect_ratio: data?.aspect_ratio ?? aspectRatio,
+          design_notes: data?.design_notes ?? '',
+          description,
+          date: new Date().toISOString(),
+        }
+        setResult(item)
+        if (imageUrl) {
+          onAddGraphic(item)
+        } else {
+          setError('The graphic was processed but no image was returned. This can happen with certain prompts. Please try rephrasing your description or try again.')
+        }
+      } else {
+        setError(res?.error ?? 'An error occurred while generating the graphic. Please try again.')
       }
-      setResult(item)
-      if (imageUrl) onAddGraphic(item)
-      if (!imageUrl && !data) {
-        setError('No image was generated. Please try again.')
-      }
-    } else {
-      setError(res?.error ?? 'An error occurred while generating the graphic.')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.')
     }
 
     setLoading(false)
@@ -979,18 +1022,20 @@ function GraphicsStudioScreen({
             <div className="flex flex-col items-center justify-center py-16 space-y-4">
               <div className="w-48 h-48 rounded-[0.875rem] bg-muted animate-pulse" />
               <p className="text-sm text-muted-foreground flex items-center gap-2"><FiLoader className="h-4 w-4 animate-spin" /> Creating your graphic...</p>
+              <p className="text-xs text-muted-foreground">Image generation may take 15-30 seconds</p>
             </div>
-          ) : error ? (
+          ) : error && !result ? (
             <ErrorBanner message={error} onRetry={handleGenerate} />
           ) : result ? (
             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+              {error && <ErrorBanner message={error} onRetry={handleGenerate} />}
               {result?.imageUrl ? (
                 <div className="rounded-[0.875rem] overflow-hidden border border-border">
-                  <img src={result.imageUrl} alt={result?.image_description ?? 'Generated graphic'} className="w-full object-contain max-h-[400px]" />
+                  <img src={result.imageUrl} alt={result?.image_description ?? 'Generated graphic'} className="w-full object-contain max-h-[400px]" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
                 </div>
-              ) : (
+              ) : !error ? (
                 <div className="text-center py-8 text-sm text-muted-foreground">No image generated. Try again with a different description.</div>
-              )}
+              ) : null}
 
               {/* Metadata */}
               <div className="space-y-2">

@@ -176,15 +176,35 @@ export async function POST(request: NextRequest) {
 
     if (response.ok) {
       // Parse the Lyzr API envelope first to extract module_outputs
-      // before parseLLMJson unwraps through the "response" key and loses siblings
+      // before parseLLMJson unwraps through the "response" key and loses siblings.
+      // Image agents may return module_outputs at various nesting levels.
       let moduleOutputs: ModuleOutputs | undefined
       let agentResponseRaw: any = rawText
 
       try {
         const envelope = JSON.parse(rawText)
-        if (envelope && typeof envelope === 'object' && 'response' in envelope) {
-          moduleOutputs = envelope.module_outputs
-          agentResponseRaw = envelope.response
+        if (envelope && typeof envelope === 'object') {
+          // Extract module_outputs from all possible locations
+          if (envelope.module_outputs) {
+            moduleOutputs = envelope.module_outputs
+          } else if (envelope.response?.module_outputs) {
+            moduleOutputs = envelope.response.module_outputs
+          } else if (envelope.data?.module_outputs) {
+            moduleOutputs = envelope.data.module_outputs
+          }
+
+          // Also check for artifact_files directly on the envelope (some image agents)
+          if (!moduleOutputs?.artifact_files) {
+            if (Array.isArray(envelope.artifact_files)) {
+              moduleOutputs = { artifact_files: envelope.artifact_files }
+            } else if (Array.isArray(envelope.response?.artifact_files)) {
+              moduleOutputs = { artifact_files: envelope.response.artifact_files }
+            }
+          }
+
+          if ('response' in envelope) {
+            agentResponseRaw = envelope.response
+          }
         }
       } catch {
         // Not standard JSON envelope, fall through — parseLLMJson will handle it
